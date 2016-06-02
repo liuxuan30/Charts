@@ -124,6 +124,11 @@ public class BarChartRenderer: ChartDataRendererBase
                     break
                 }
                 
+                let cornerRadius: CGFloat = CGRectGetWidth(barRect) <= 5 ? 1.0 : 2.0
+                let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: UIRectCorner.AllCorners, cornerRadii: CGSizeMake(cornerRadius, cornerRadius))
+                
+                let roundedPath = bezierPath.CGPath
+                
                 // if drawing the bar shadow is enabled
                 if (drawBarShadowEnabled)
                 {
@@ -133,12 +138,16 @@ public class BarChartRenderer: ChartDataRendererBase
                     barShadow.size.height = viewPortHandler.contentHeight
                     
                     CGContextSetFillColorWithColor(context, dataSet.barShadowColor.CGColor)
-                    CGContextFillRect(context, barShadow)
+//                    CGContextFillRect(context, barShadow)
+                    CGContextAddPath(context, roundedPath)
+                    CGContextFillPath(context)
                 }
                 
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 CGContextSetFillColorWithColor(context, dataSet.colorAt(j).CGColor)
-                CGContextFillRect(context, barRect)
+//                CGContextFillRect(context, barRect)
+                CGContextAddPath(context, roundedPath)
+                CGContextFillPath(context)
                 
                 if drawBorder
                 {
